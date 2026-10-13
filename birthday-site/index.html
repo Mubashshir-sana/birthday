@@ -204,6 +204,8 @@
     .answer-summary { margin: 23px auto 0; padding: 16px 18px; border-left: 2px solid var(--gold); color: var(--muted); background: rgba(255, 255, 255, .035); text-align: left; font: .91rem/1.75 system-ui, sans-serif; }
     .answer-summary p { margin: 0; }
     .answer-summary p + p { margin-top: 8px; }
+    .care-promise { max-width: 490px; margin: 18px auto 0; color: var(--muted); font-size: 1rem; line-height: 1.8; }
+    .share-status { min-height: 1.5em; margin: 10px 0 0; color: var(--gold); font: .88rem/1.5 system-ui, sans-serif; }
 
     .button {
       min-height: 49px;
@@ -320,7 +322,7 @@
       <form id="question-form">
         <fieldset class="question">
           <legend id="question-title"></legend>
-          <p class="question-hint">Choose the answer that feels most like you. You can skip any question.</p>
+          <p class="question-hint">Choose how you'd like me to be there for you. You can skip any question.</p>
           <ul class="options" id="options"></ul>
         </fieldset>
         <p class="journey-error" id="journey-error" role="alert" hidden>Please choose an option, or select “I'd rather skip this one.”</p>
@@ -337,6 +339,9 @@
       <p class="copy">Though miles separate us today, you are very much in my thoughts. I hope this new year of your life brings you peace, laughter, good health, and all the little joys you deserve—not only today, but throughout the year ahead.</p>
       <p class="copy">I admire your heart and the person you are. Being far away makes me wish I could share this moment beside you, but I hope this note reminds you how deeply appreciated and cherished you are.</p>
       <div class="answer-summary" id="answer-summary" hidden aria-label="Your answers"></div>
+      <p class="care-promise">Your answers matter to me. I'll do my best to treat you in the ways you've said feel supportive, and I'll keep listening—because what feels right can change.</p>
+      <button class="button secondary" id="share-answers" type="button" hidden>Share your answers with me</button>
+      <p class="share-status" id="share-status" role="status" aria-live="polite"></p>
       <div class="divider" aria-hidden="true"></div>
       <p class="copy">On this birthday, I also want to ask you something that matters to me. There is no pressure to answer today; I want your answer to be yours, given in your own time.</p>
       <p class="proposal">Will you marry me?</p>
@@ -354,33 +359,34 @@
     const journey = document.getElementById("journey");
     const message = document.getElementById("message");
     const response = document.getElementById("response");
+    const shareStatus = document.getElementById("share-status");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const questions = [
       {
-        title: "When you're angry or overwhelmed, what helps most?",
+        title: "When you're angry or overwhelmed, how would you like me to treat you?",
         answers: [
-          "A little quiet time, then a gentle check-in",
-          "Someone to listen calmly without rushing me",
-          "A reassuring reminder that we're okay",
-          "Space to talk it through when I'm ready"
+          "Give me a little quiet time, then check in gently",
+          "Listen calmly without rushing me or trying to fix everything",
+          "Reassure me kindly that we're okay",
+          "Give me space to talk it through when I'm ready"
         ]
       },
       {
-        title: "When you're feeling sad, what would comfort you?",
+        title: "When you're feeling sad, how would you like me to be there for you?",
         answers: [
-          "Being listened to, without needing to fix everything",
-          "A few kind, reassuring words",
-          "A light distraction to help me breathe",
-          "Knowing someone is here, even from far away"
+          "Listen and let me share, without needing to fix everything",
+          "Offer a few kind, reassuring words",
+          "Help distract me gently and make me smile",
+          "Remind me you're here for me, even from far away"
         ]
       },
       {
-        title: "When something makes you happy, how do you like to celebrate?",
+        title: "When you're happy, how would you like me to celebrate with you?",
         answers: [
-          "Tell someone I love and share the moment",
-          "A heartfelt message that celebrates my win",
-          "A fun conversation and plenty of laughter",
-          "A quiet moment to enjoy it in my own way"
+          "Share the moment and be excited with me",
+          "Send a heartfelt message celebrating my good news",
+          "Make me laugh and enjoy the happiness together",
+          "Let me enjoy it in my own way, while knowing you're happy for me"
         ]
       }
     ];
@@ -451,7 +457,7 @@
     function showAnswerSummary() {
       const summary = document.getElementById("answer-summary");
       summary.replaceChildren();
-      const labels = ["When you're angry or overwhelmed", "When you're feeling sad", "When you're happy"];
+      const labels = ["When I'm angry or overwhelmed", "When I'm sad", "When I'm happy"];
       questions.forEach((question, index) => {
         const selected = answers[index];
         if (selected === null || selected === question.answers.length) return;
@@ -460,7 +466,34 @@
         summary.appendChild(line);
       });
       summary.hidden = summary.childElementCount === 0;
+      document.getElementById("share-answers").hidden = summary.hidden;
     }
+
+    document.getElementById("share-answers").addEventListener("click", async () => {
+      const answerText = Array.from(document.getElementById("answer-summary").children)
+        .map((line) => line.textContent)
+        .join("\n");
+      const shareText = `Here's how I'd like you to be there for me:\n${answerText}`;
+
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: "How I'd like to be cared for", text: shareText });
+          shareStatus.textContent = "Choose a messaging app and send your answers to me.";
+        } catch (error) {
+          if (error instanceof DOMException && error.name === "AbortError") return;
+          throw error;
+        }
+        return;
+      }
+
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(shareText);
+        shareStatus.textContent = "Your answers are copied. Paste them into a message to me.";
+        return;
+      }
+
+      shareStatus.textContent = "You can share your answers by sending me a screenshot of this page.";
+    });
 
     function releaseConfetti() {
       const colors = ["#e9c78e", "#d88d98", "#f4e6cf", "#b88778"];
