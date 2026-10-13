@@ -172,6 +172,39 @@
       background: linear-gradient(90deg, transparent, var(--gold), transparent);
     }
 
+    .journey { max-width: 510px; margin: 0 auto; }
+    .progress-label { margin: 0 0 9px; color: var(--gold); font: 600 .75rem/1.5 system-ui, sans-serif; letter-spacing: .1em; }
+    .progress-track { height: 3px; margin: 0 auto 28px; overflow: hidden; background: rgba(248, 240, 232, .14); }
+    .progress-fill { width: 25%; height: 100%; background: linear-gradient(90deg, var(--rose), var(--gold)); transition: width .3s ease; }
+    .question { margin: 0; padding: 0; border: 0; }
+    .question legend { width: 100%; margin: 0 0 8px; color: var(--ink); font-size: clamp(1.45rem, 5vw, 2rem); line-height: 1.3; }
+    .question-hint { margin: 0 0 20px; color: var(--muted); font: .9rem/1.6 system-ui, sans-serif; }
+    .options { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; text-align: left; }
+    .option {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 15px;
+      border: 1px solid rgba(248, 240, 232, .17);
+      border-radius: 3px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, .025);
+      cursor: pointer;
+      font: .94rem/1.55 system-ui, sans-serif;
+      transition: border-color .18s ease, background .18s ease;
+    }
+
+    .option:hover { border-color: rgba(233, 199, 142, .52); }
+    .option:has(input:checked) { border-color: var(--gold); color: var(--ink); background: rgba(233, 199, 142, .08); }
+    .option input { flex: 0 0 auto; width: 17px; height: 17px; margin: 2px 0 0; accent-color: var(--gold); }
+    .option:focus-within { outline: 2px solid var(--rose); outline-offset: 3px; }
+    .journey-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 23px; }
+    .journey-actions .button { margin: 0; }
+    .journey-error { margin: 12px 0 0; color: #f1aab0; font: .9rem/1.5 system-ui, sans-serif; }
+    .answer-summary { margin: 23px auto 0; padding: 16px 18px; border-left: 2px solid var(--gold); color: var(--muted); background: rgba(255, 255, 255, .035); text-align: left; font: .91rem/1.75 system-ui, sans-serif; }
+    .answer-summary p { margin: 0; }
+    .answer-summary p + p { margin-top: 8px; }
+
     .button {
       min-height: 49px;
       margin-top: 26px;
@@ -274,8 +307,28 @@
       </div>
       <p class="eyebrow">A little birthday surprise</p>
       <h1 id="welcome-title">Tahreem Fatma</h1>
-      <p class="intro">Some people make life feel warmer simply by being in it. Today, I wanted to send a little of that warmth back to you.</p>
-      <button class="button" id="open-button" type="button">Open your birthday message</button>
+      <p class="intro">Some people make life feel warmer simply by being in it. Today, I wanted to send a little of that warmth back to you—and learn a little more about what makes you feel cared for.</p>
+      <button class="button" id="open-button" type="button">Begin your birthday surprise</button>
+    </section>
+
+    <section id="journey" class="journey" aria-labelledby="question-title" hidden>
+      <p class="eyebrow">A little about what matters to you</p>
+      <p class="progress-label" id="progress-label"></p>
+      <div class="progress-track" role="progressbar" aria-label="Birthday questions" aria-valuemin="1" aria-valuemax="3" aria-valuenow="1">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <form id="question-form">
+        <fieldset class="question">
+          <legend id="question-title"></legend>
+          <p class="question-hint">Choose the answer that feels most like you. You can skip any question.</p>
+          <ul class="options" id="options"></ul>
+        </fieldset>
+        <p class="journey-error" id="journey-error" role="alert" hidden>Please choose an option, or select “I'd rather skip this one.”</p>
+        <div class="journey-actions">
+          <button class="button secondary" id="back-button" type="button">Back</button>
+          <button class="button" id="next-button" type="submit">Next question</button>
+        </div>
+      </form>
     </section>
 
     <section id="message" aria-labelledby="message-title" hidden>
@@ -283,6 +336,7 @@
       <h2 id="message-title" tabindex="-1">Happy birthday, Tahreem</h2>
       <p class="copy">Though miles separate us today, you are very much in my thoughts. I hope this new year of your life brings you peace, laughter, good health, and all the little joys you deserve—not only today, but throughout the year ahead.</p>
       <p class="copy">I admire your heart and the person you are. Being far away makes me wish I could share this moment beside you, but I hope this note reminds you how deeply appreciated and cherished you are.</p>
+      <div class="answer-summary" id="answer-summary" hidden aria-label="Your answers"></div>
       <div class="divider" aria-hidden="true"></div>
       <p class="copy">On this birthday, I also want to ask you something that matters to me. There is no pressure to answer today; I want your answer to be yours, given in your own time.</p>
       <p class="proposal">Will you marry me?</p>
@@ -297,17 +351,116 @@
 
   <script>
     const welcome = document.getElementById("welcome");
+    const journey = document.getElementById("journey");
     const message = document.getElementById("message");
     const response = document.getElementById("response");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const questions = [
+      {
+        title: "When you're angry or overwhelmed, what helps most?",
+        answers: [
+          "A little quiet time, then a gentle check-in",
+          "Someone to listen calmly without rushing me",
+          "A reassuring reminder that we're okay",
+          "Space to talk it through when I'm ready"
+        ]
+      },
+      {
+        title: "When you're feeling sad, what would comfort you?",
+        answers: [
+          "Being listened to, without needing to fix everything",
+          "A few kind, reassuring words",
+          "A light distraction to help me breathe",
+          "Knowing someone is here, even from far away"
+        ]
+      },
+      {
+        title: "When something makes you happy, how do you like to celebrate?",
+        answers: [
+          "Tell someone I love and share the moment",
+          "A heartfelt message that celebrates my win",
+          "A fun conversation and plenty of laughter",
+          "A quiet moment to enjoy it in my own way"
+        ]
+      }
+    ];
+    const answers = [null, null, null];
+    let questionIndex = 0;
+
+    function renderQuestion() {
+      const question = questions[questionIndex];
+      const progress = document.querySelector(".progress-track");
+      document.getElementById("progress-label").textContent = `A little question ${questionIndex + 1} of ${questions.length}`;
+      document.getElementById("progress-fill").style.width = `${((questionIndex + 1) / questions.length) * 100}%`;
+      progress.setAttribute("aria-valuenow", String(questionIndex + 1));
+      document.getElementById("question-title").textContent = question.title;
+      document.getElementById("options").innerHTML = [...question.answers, "I'd rather skip this one"]
+        .map((answer, index) => `<li><label class="option"><input type="radio" name="answer" value="${index}"><span>${answer}</span></label></li>`)
+        .join("");
+      const selected = answers[questionIndex];
+      if (selected !== null) {
+        document.querySelector(`input[name="answer"][value="${selected}"]`).checked = true;
+      }
+      document.getElementById("journey-error").hidden = true;
+      document.getElementById("back-button").textContent = questionIndex === 0 ? "Back" : "Previous";
+      document.getElementById("next-button").textContent = questionIndex === questions.length - 1 ? "Read your birthday message" : "Next question";
+      document.querySelector("#options input").focus();
+    }
 
     document.getElementById("open-button").addEventListener("click", () => {
       welcome.hidden = true;
+      journey.hidden = false;
+      renderQuestion();
+    });
+
+    document.getElementById("back-button").addEventListener("click", () => {
+      if (questionIndex === 0) {
+        journey.hidden = true;
+        welcome.hidden = false;
+        document.getElementById("open-button").focus();
+        return;
+      }
+      questionIndex -= 1;
+      renderQuestion();
+    });
+
+    document.getElementById("question-form").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const selection = document.querySelector('input[name="answer"]:checked');
+      if (!selection) {
+        document.getElementById("journey-error").hidden = false;
+        document.querySelector("#options input").focus();
+        return;
+      }
+
+      answers[questionIndex] = Number(selection.value);
+      if (questionIndex < questions.length - 1) {
+        questionIndex += 1;
+        renderQuestion();
+        return;
+      }
+
+      showAnswerSummary();
+      journey.hidden = true;
       message.hidden = false;
       message.classList.add("reveal");
       document.getElementById("message-title").focus();
       if (!reducedMotion) releaseConfetti();
     });
+
+    function showAnswerSummary() {
+      const summary = document.getElementById("answer-summary");
+      summary.replaceChildren();
+      const labels = ["When you're angry or overwhelmed", "When you're feeling sad", "When you're happy"];
+      questions.forEach((question, index) => {
+        const selected = answers[index];
+        if (selected === null || selected === question.answers.length) return;
+        const line = document.createElement("p");
+        line.textContent = `${labels[index]}: ${question.answers[selected]}.`;
+        summary.appendChild(line);
+      });
+      summary.hidden = summary.childElementCount === 0;
+    }
 
     function releaseConfetti() {
       const colors = ["#e9c78e", "#d88d98", "#f4e6cf", "#b88778"];
