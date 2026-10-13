@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17151a">
+  <meta name="description" content="A birthday message for Tahreem Fatma.">
+  <title>For Tahreem Fatma, with love</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f8f0e8;
+      --muted: #c8bdb8;
+      --gold: #e9c78e;
+      --rose: #d88d98;
+      --night: #17151a;
+      --card: rgba(37, 31, 37, .91);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 36px 18px;
+      display: grid;
+      place-items: center;
+      overflow-x: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 50% 4%, rgba(144, 82, 92, .28), transparent 42%),
+        radial-gradient(ellipse at 5% 90%, rgba(112, 79, 90, .19), transparent 35%),
+        var(--night);
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    button { font: inherit; }
+
+    .stars {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .star {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: #f7ddb0;
+      opacity: .4;
+      animation: twinkle 3.6s ease-in-out infinite alternate;
+    }
+
+    .star:nth-child(1) { top: 13%; left: 17%; animation-delay: -.5s; }
+    .star:nth-child(2) { top: 22%; left: 82%; animation-delay: -2s; }
+    .star:nth-child(3) { top: 71%; left: 12%; animation-delay: -1.4s; }
+    .star:nth-child(4) { top: 82%; left: 89%; animation-delay: -.8s; }
+    .star:nth-child(5) { top: 48%; left: 91%; animation-delay: -2.7s; }
+    .star:nth-child(6) { top: 40%; left: 7%; animation-delay: -1.9s; }
+
+    .card {
+      position: relative;
+      width: min(100%, 680px);
+      padding: clamp(30px, 7vw, 68px);
+      border: 1px solid rgba(233, 199, 142, .22);
+      border-radius: 5px;
+      background: linear-gradient(145deg, rgba(48, 38, 45, .97), var(--card));
+      box-shadow: 0 28px 100px rgba(0, 0, 0, .38), 0 0 80px rgba(177, 102, 112, .09);
+      text-align: center;
+      animation: arrive .9s cubic-bezier(.2, .8, .2, 1) both;
+    }
+
+    .eyebrow {
+      margin: 0 0 17px;
+      color: var(--gold);
+      font: 600 .72rem/1.5 system-ui, sans-serif;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.7rem, 10vw, 5.1rem);
+      font-weight: 400;
+      letter-spacing: -.055em;
+      line-height: 1.02;
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      color: var(--gold);
+      font-size: clamp(1.8rem, 6vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1.2;
+    }
+
+    .intro, .copy {
+      max-width: 490px;
+      margin: 20px auto 0;
+      color: var(--muted);
+      font-size: clamp(1.02rem, 3vw, 1.13rem);
+      line-height: 1.85;
+    }
+
+    .birthday-mark {
+      position: relative;
+      width: 92px;
+      height: 100px;
+      margin: 0 auto 25px;
+      display: grid;
+      place-items: end center;
+    }
+
+    .cake {
+      position: relative;
+      width: 72px;
+      height: 42px;
+      border-radius: 5px 5px 10px 10px;
+      background: linear-gradient(90deg, #9b5861, #c98183 52%, #9b5861);
+      box-shadow: inset 0 7px #edc8b9, 0 9px 18px rgba(0, 0, 0, .2);
+    }
+
+    .cake::before {
+      position: absolute;
+      top: 7px;
+      left: 0;
+      width: 100%;
+      height: 7px;
+      border-radius: 50%;
+      background: #f2d8c9;
+      content: "";
+    }
+
+    .candle {
+      position: absolute;
+      bottom: 36px;
+      left: 43px;
+      width: 6px;
+      height: 31px;
+      border-radius: 3px;
+      background: repeating-linear-gradient(0deg, #f4d6a0 0 6px, #d88d98 6px 10px);
+    }
+
+    .flame {
+      position: absolute;
+      bottom: 68px;
+      left: 41px;
+      width: 10px;
+      height: 16px;
+      border-radius: 55% 45% 55% 45%;
+      background: #ffd58a;
+      box-shadow: 0 0 13px 5px rgba(255, 196, 106, .42);
+      transform-origin: 50% 100%;
+      animation: flicker 1.35s ease-in-out infinite alternate;
+    }
+
+    .cake-sparkle {
+      position: absolute;
+      top: 5px;
+      right: 2px;
+      color: var(--gold);
+      font-size: 1.5rem;
+      animation: twinkle 2s ease-in-out infinite alternate;
+    }
+
+    .divider {
+      width: 54px;
+      height: 1px;
+      margin: 28px auto;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .button {
+      min-height: 49px;
+      margin-top: 26px;
+      padding: 13px 25px;
+      border: 1px solid rgba(233, 199, 142, .65);
+      border-radius: 3px;
+      color: #211a1b;
+      background: linear-gradient(110deg, #e6c68f, #f2dcb3);
+      cursor: pointer;
+      font: 600 .94rem/1.4 system-ui, sans-serif;
+      box-shadow: 0 7px 26px rgba(233, 199, 142, .12);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .button:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(233, 199, 142, .22); }
+    .button:focus-visible { outline: 3px solid var(--rose); outline-offset: 4px; }
+
+    .proposal {
+      margin: 8px 0 0;
+      color: var(--rose);
+      font-size: clamp(1.9rem, 7vw, 2.8rem);
+      line-height: 1.25;
+    }
+
+    .answer-buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 25px;
+    }
+
+    .answer-buttons .button { margin: 0; }
+
+    .button.secondary {
+      border-color: rgba(248, 240, 232, .32);
+      color: var(--ink);
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .button.secondary:hover { background: rgba(248, 240, 232, .07); }
+    .response { min-height: 1.8em; margin: 19px 0 0; color: var(--muted); line-height: 1.7; }
+    .signature { margin: 27px 0 0; color: var(--gold); font-size: 1.08rem; font-style: italic; }
+    .reveal { animation: reveal .95s cubic-bezier(.2, .8, .2, 1) both; }
+    [hidden] { display: none !important; }
+
+    @keyframes arrive {
+      from { opacity: 0; transform: translateY(18px) scale(.985); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes reveal {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes twinkle {
+      from { opacity: .2; transform: scale(.75); }
+      to { opacity: .85; transform: scale(1.3); }
+    }
+
+    @keyframes flicker {
+      from { transform: rotate(-5deg) scale(.96); }
+      to { transform: rotate(5deg) scale(1.06); }
+    }
+
+    .confetti {
+      position: fixed;
+      z-index: 5;
+      top: -16px;
+      width: 8px;
+      height: 12px;
+      pointer-events: none;
+      animation: fall 3.5s ease-in forwards;
+    }
+
+    @keyframes fall {
+      to { transform: translate3d(var(--drift), 110vh, 0) rotate(760deg); opacity: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="stars" aria-hidden="true">
+    <i class="star"></i><i class="star"></i><i class="star"></i>
+    <i class="star"></i><i class="star"></i><i class="star"></i>
+  </div>
+
+  <main class="card">
+    <section id="welcome" aria-labelledby="welcome-title">
+      <div class="birthday-mark" aria-hidden="true">
+        <span class="cake-sparkle">✧</span>
+        <span class="flame"></span>
+        <span class="candle"></span>
+        <span class="cake"></span>
+      </div>
+      <p class="eyebrow">A little birthday surprise</p>
+      <h1 id="welcome-title">Tahreem Fatma</h1>
+      <p class="intro">Some people make life feel warmer simply by being in it. Today, I wanted to send a little of that warmth back to you.</p>
+      <button class="button" id="open-button" type="button">Open your birthday message</button>
+    </section>
+
+    <section id="message" aria-labelledby="message-title" hidden>
+      <p class="eyebrow">A birthday wish from my heart</p>
+      <h2 id="message-title" tabindex="-1">Happy birthday, Tahreem</h2>
+      <p class="copy">Though miles separate us today, you are very much in my thoughts. I hope this new year of your life brings you peace, laughter, good health, and all the little joys you deserve—not only today, but throughout the year ahead.</p>
+      <p class="copy">I admire your heart and the person you are. Being far away makes me wish I could share this moment beside you, but I hope this note reminds you how deeply appreciated and cherished you are.</p>
+      <div class="divider" aria-hidden="true"></div>
+      <p class="copy">On this birthday, I also want to ask you something that matters to me. There is no pressure to answer today; I want your answer to be yours, given in your own time.</p>
+      <p class="proposal">Will you marry me?</p>
+      <div class="answer-buttons" aria-label="Your response">
+        <button class="button" id="yes-button" type="button">Yes, I would love to</button>
+        <button class="button secondary" id="think-button" type="button">I would like time to think</button>
+      </div>
+      <p class="response" id="response" role="status" aria-live="polite"></p>
+      <p class="signature">Happy birthday—with all my affection and respect.</p>
+    </section>
+  </main>
+
+  <script>
+    const welcome = document.getElementById("welcome");
+    const message = document.getElementById("message");
+    const response = document.getElementById("response");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    document.getElementById("open-button").addEventListener("click", () => {
+      welcome.hidden = true;
+      message.hidden = false;
+      message.classList.add("reveal");
+      document.getElementById("message-title").focus();
+      if (!reducedMotion) releaseConfetti();
+    });
+
+    function releaseConfetti() {
+      const colors = ["#e9c78e", "#d88d98", "#f4e6cf", "#b88778"];
+      for (let index = 0; index < 64; index += 1) {
+        const piece = document.createElement("i");
+        piece.className = "confetti";
+        piece.setAttribute("aria-hidden", "true");
+        piece.style.left = `${Math.random() * 100}vw`;
+        piece.style.backgroundColor = colors[index % colors.length];
+        piece.style.animationDelay = `${Math.random() * 1.2}s`;
+        piece.style.setProperty("--drift", `${Math.random() * 180 - 90}px`);
+        document.body.appendChild(piece);
+        piece.addEventListener("animationend", () => piece.remove(), { once: true });
+      }
+    }
+
+    document.getElementById("yes-button").addEventListener("click", () => {
+      response.textContent = "You have made me very happy. I look forward to talking about our future together.";
+    });
+
+    document.getElementById("think-button").addEventListener("click", () => {
+      response.textContent = "Of course. Take all the time you need. Your comfort and your honest answer matter most to me.";
+    });
+  </script>
+</body>
+</html>
