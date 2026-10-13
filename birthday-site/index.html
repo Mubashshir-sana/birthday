@@ -227,6 +227,26 @@
     .yes-message { overflow: hidden; }
     .yes-bouquet { margin: 0 auto 20px; font-size: clamp(2.5rem, 10vw, 4rem); letter-spacing: .12em; animation: bouquet-arrive .9s cubic-bezier(.2, .8, .2, 1) both; }
     .yes-title { color: var(--gold); font-size: clamp(2.2rem, 9vw, 4rem); }
+    .date-reveal { position: relative; width: min(100%, 350px); margin: 40px auto 30px; padding-top: 26px; }
+    .date-card {
+      position: relative;
+      z-index: 1;
+      padding: 20px 24px 22px;
+      border: 1px solid rgba(233, 199, 142, .65);
+      border-radius: 4px;
+      color: var(--ink);
+      background: linear-gradient(145deg, #47333a, #2b242b);
+      box-shadow: 0 10px 38px rgba(0, 0, 0, .32), 0 0 26px rgba(233, 199, 142, .15);
+      animation: date-pop 1.25s cubic-bezier(.16, 1.25, .42, 1) .7s both;
+    }
+
+    .date-card-label { display: block; color: var(--gold); font: 600 .72rem/1.5 system-ui, sans-serif; letter-spacing: .2em; text-transform: uppercase; }
+    .date-card-date { display: block; margin-top: 8px; color: #fff5e6; font-size: clamp(1.8rem, 7vw, 2.6rem); line-height: 1.15; }
+    .date-card-note { display: block; margin-top: 7px; color: var(--muted); font: .88rem/1.5 system-ui, sans-serif; }
+    .gift-box { position: relative; width: 132px; height: 78px; margin: -7px auto 0; border: 2px solid #d5aa70; border-top: 0; border-radius: 0 0 7px 7px; background: linear-gradient(90deg, #8c4d5a 0 39%, #f0cf97 39% 47%, #a45c65 47% 100%); box-shadow: 0 14px 25px rgba(0, 0, 0, .27); }
+    .gift-box::after { position: absolute; top: 0; bottom: 0; left: 50%; width: 10px; background: #f0cf97; content: ""; transform: translateX(-50%); }
+    .gift-lid { position: absolute; z-index: 2; top: -12px; left: -9px; width: 146px; height: 15px; border: 2px solid #e6c083; border-radius: 4px; background: linear-gradient(90deg, #a55c65 0 39%, #f3d39d 39% 47%, #b66870 47% 100%); transform-origin: 8% 100%; animation: lid-open .8s ease-out .25s both; }
+    .gift-bow { position: absolute; z-index: 3; top: -23px; left: 50%; color: #f2d39f; font-size: 1.35rem; line-height: 1; transform: translateX(-50%); animation: bow-lift .7s ease-out .2s both; }
     .flower {
       position: fixed;
       z-index: 10;
@@ -234,6 +254,15 @@
       pointer-events: none;
       animation: flower-fall var(--duration) cubic-bezier(.35, .05, .65, .95) var(--delay) forwards;
       filter: drop-shadow(0 2px 5px rgba(0, 0, 0, .25));
+    }
+    .spark {
+      position: fixed;
+      z-index: 11;
+      top: -2rem;
+      pointer-events: none;
+      color: #ffe4a6;
+      text-shadow: 0 0 10px #ffd77c, 0 0 22px rgba(255, 215, 124, .85);
+      animation: spark-fall var(--duration) ease-in-out var(--delay) forwards;
     }
 
     .button {
@@ -328,6 +357,28 @@
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
+    @keyframes lid-open {
+      from { transform: rotate(0); }
+      to { transform: rotate(-42deg) translate(-13px, -16px); }
+    }
+
+    @keyframes bow-lift {
+      from { opacity: 1; }
+      to { opacity: 0; transform: translate(-50%, -21px) scale(.7); }
+    }
+
+    @keyframes date-pop {
+      0% { opacity: 0; transform: translateY(50px) scale(.65); }
+      70% { opacity: 1; transform: translateY(-9px) scale(1.04); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes spark-fall {
+      0% { opacity: 0; transform: translate3d(0, -5vh, 0) rotate(0) scale(.4); }
+      15% { opacity: 1; }
+      100% { opacity: 0; transform: translate3d(var(--drift), 105vh, 0) rotate(300deg) scale(1.15); }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
     }
@@ -402,13 +453,26 @@
     </section>
 
     <section id="yes-message" class="yes-message" aria-labelledby="yes-title" hidden>
-      <p class="eyebrow">A beautiful new beginning</p>
+      <p class="eyebrow">Our beautiful new beginning</p>
       <div class="yes-bouquet" aria-hidden="true">💐 🌸 💐</div>
       <h2 class="yes-title" id="yes-title" tabindex="-1">You said yes, Tahreem!</h2>
-      <p class="copy">Your yes has filled this distance between us with a happiness I can hardly put into words. Thank you for choosing to begin this next chapter with me.</p>
-      <p class="copy">I will meet this promise with patience, honesty, respect, and care—one day and one conversation at a time. Until we can celebrate side by side, please know that I am smiling across every mile.</p>
+      <p class="copy">Your yes has made this one of the happiest moments of my life. Tahreem, your kind heart, quiet strength, and the way you bring warmth to the people around you are among the many things I admire about you. I feel incredibly fortunate that we get to build a life together.</p>
+      <p class="copy">Our wedding day is set. A little keepsake for the date we will begin our next chapter side by side:</p>
+      <div class="date-reveal" aria-label="Our wedding day is 20 October 2026">
+        <div class="date-card">
+          <span class="date-card-label">Our wedding day</span>
+          <time class="date-card-date" datetime="2026-10-20">20 October 2026</time>
+          <span class="date-card-note">The beginning of our forever, together</span>
+        </div>
+        <div class="gift-box" aria-hidden="true">
+          <span class="gift-lid"></span>
+          <span class="gift-bow">✿</span>
+        </div>
+      </div>
+      <p class="copy">I promise to keep choosing you with patience, honesty, and respect; to listen when you need me, celebrate your joys, and stand beside you through the ordinary days as well as the unforgettable ones. I hope we build a home filled with friendship, laughter, trust, and room for both of us to grow.</p>
+      <p class="copy">You deserve to feel cherished not just in grand moments like this, but in the small ways we care for one another every day. I cannot wait to begin that life with you.</p>
       <div class="divider" aria-hidden="true"></div>
-      <p class="signature">Today is your birthday. This is the beginning of our next chapter.</p>
+      <p class="signature">Happy birthday, my future wife. Here's to the beautiful life we'll build together.</p>
     </section>
   </main>
 
@@ -603,9 +667,9 @@
       }
     }
 
-    function releaseFlowers() {
-      const flowers = ["🌸", "🌷", "🌼", "💮", "🌺"];
-      for (let index = 0; index < 60; index += 1) {
+    function releaseWeddingCelebration() {
+      const flowers = ["🌹", "🌹", "🌹", "🌸", "🌺"];
+      for (let index = 0; index < 72; index += 1) {
         const flower = document.createElement("span");
         flower.className = "flower";
         flower.setAttribute("aria-hidden", "true");
@@ -619,6 +683,21 @@
         document.body.appendChild(flower);
         flower.addEventListener("animationend", () => flower.remove(), { once: true });
       }
+
+      const sparks = ["✦", "✧", "✨", "✧"];
+      for (let index = 0; index < 36; index += 1) {
+        const spark = document.createElement("span");
+        spark.className = "spark";
+        spark.setAttribute("aria-hidden", "true");
+        spark.textContent = sparks[index % sparks.length];
+        spark.style.left = `${Math.random() * 100}vw`;
+        spark.style.fontSize = `${12 + Math.random() * 18}px`;
+        spark.style.setProperty("--delay", `${Math.random() * 1.4}s`);
+        spark.style.setProperty("--duration", `${2.5 + Math.random() * 2}s`);
+        spark.style.setProperty("--drift", `${Math.random() * 120 - 60}px`);
+        document.body.appendChild(spark);
+        spark.addEventListener("animationend", () => spark.remove(), { once: true });
+      }
     }
 
     document.getElementById("yes-button").addEventListener("click", () => {
@@ -626,7 +705,7 @@
       yesMessage.hidden = false;
       yesMessage.classList.add("reveal");
       document.getElementById("yes-title").focus();
-      if (!reducedMotion) releaseFlowers();
+      if (!reducedMotion) releaseWeddingCelebration();
     });
 
     document.getElementById("think-button").addEventListener("click", () => {
