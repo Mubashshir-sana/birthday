@@ -1,4 +1,4 @@
-name: Deploy birthday app to GitHub Pages
+name: Publish Tahreem's birthday surprise to GitHub Pages
 
 on:
   push:
